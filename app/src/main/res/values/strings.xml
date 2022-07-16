@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SearchWithPaginationTask</string>
+    <string name="search_screen_title">Search</string>
 </resources>
