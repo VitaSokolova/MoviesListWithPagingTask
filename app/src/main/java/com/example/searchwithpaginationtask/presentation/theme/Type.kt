@@ -1,4 +1,4 @@
-package com.example.searchwithpaginationtask.ui.theme
+package com.example.searchwithpaginationtask.presentation.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
