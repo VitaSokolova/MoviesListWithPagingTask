@@ -2,4 +2,7 @@
     <string name="app_name">SearchWithPaginationTask</string>
     <string name="search_screen_title">Search</string>
     <string name="price_text">%.0f€</string>
+    <string name="error_text">Something went wrong</string>
+    <string name="try_again_btn">Try again</string>
+    <string name="empty_search_text">Start searching and we will show, what we have for you</string>
 </resources>

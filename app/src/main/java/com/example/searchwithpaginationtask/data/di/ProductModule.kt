@@ -24,5 +24,6 @@ abstract class ProductModule {
     }
 
     @Binds
+    @Singleton
     abstract fun bindProductsRepository(productsRepository: ProductsRepositoryImpl): ProductsRepository
 }
