@@ -11,7 +11,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class MainViewModel @Inject constructor(private val productsRepository: ProductsRepository) : ViewModel() {
@@ -21,7 +20,7 @@ class MainViewModel @Inject constructor(private val productsRepository: Products
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     val products: Flow<PagingData<Product>> = _searchQuery
-        .debounce(250.milliseconds)
+        .debounce(SEARCH_DEBOUNCE_ML)
         .flatMapLatest { query ->
             productsRepository.getSearchResults(query)
         }
@@ -37,5 +36,9 @@ class MainViewModel @Inject constructor(private val productsRepository: Products
 
     fun onClearButtonClick() {
         _searchQuery.value = ""
+    }
+
+    companion object {
+        const val SEARCH_DEBOUNCE_ML = 250L
     }
 }

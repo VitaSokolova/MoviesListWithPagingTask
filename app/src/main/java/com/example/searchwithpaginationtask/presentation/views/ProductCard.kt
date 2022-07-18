@@ -9,8 +9,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -20,10 +20,12 @@ import com.example.searchwithpaginationtask.presentation.theme.SearchWithPaginat
 import com.google.accompanist.flowlayout.FlowRow
 import com.skydoves.landscapist.glide.GlideImage
 
+const val PRODUCT_TEST_TAG = "PRODUCTS_TEST_TAG"
+
 @Composable
 fun ProductCard(modifier: Modifier, product: Product) {
     Card(
-        modifier = modifier,
+        modifier = modifier.testTag(PRODUCT_TEST_TAG),
         shape = RoundedCornerShape(8.dp),
         backgroundColor = MaterialTheme.colors.surface,
     ) {
@@ -40,13 +42,8 @@ fun ProductCard(modifier: Modifier, product: Product) {
                     .padding(end = 8.dp),
                 imageModel = product.imageUrl,
                 contentScale = ContentScale.FillHeight,
-                loading = {
-                    Box(
-                        modifier = Modifier
-                            .size(64.dp)
-                            .background(Color.Gray, shape = RoundedCornerShape(8.dp))
-                    )
-                },
+                loading = { ImagePlaceholder(modifier = Modifier.align(Alignment.Center)) },
+                failure = { ImagePlaceholder(modifier = Modifier.align(Alignment.Center)) },
                 previewPlaceholder = R.drawable.ic_launcher_background
             )
             Column(verticalArrangement = Arrangement.Center) {
@@ -78,6 +75,15 @@ fun ProductCard(modifier: Modifier, product: Product) {
         }
 
     }
+}
+
+@Composable
+fun ImagePlaceholder(modifier: Modifier) {
+    Box(
+        modifier = modifier
+            .size(64.dp)
+            .background(MaterialTheme.colors.background, shape = RoundedCornerShape(8.dp)),
+    )
 }
 
 @Preview(showBackground = true)

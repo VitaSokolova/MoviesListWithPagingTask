@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -17,6 +18,9 @@ import com.example.searchwithpaginationtask.presentation.theme.SearchWithPaginat
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
+const val SEARCH_FIELD_TEST_TAG = "SEARCH_FIELD_TEST_TAG"
+const val START_SEARCHING_TEXT_TEST_TAG = "START_SEARCHING_TEXT_TEST_TAG"
+
 @Composable
 fun SearchField(
     modifier: Modifier,
@@ -24,11 +28,12 @@ fun SearchField(
     onTextChanged: (String) -> Unit,
     onClearClick: () -> Unit,
 ) {
-    //val inputValue = remember { mutableStateOf(TextFieldValue()) }
     val inputValue = queryFlow.collectAsState("")
     Column(modifier) {
         TextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(SEARCH_FIELD_TEST_TAG),
             value = inputValue.value,
             maxLines = 1,
             onValueChange = { text: String -> onTextChanged(text) },
@@ -48,7 +53,9 @@ fun SearchField(
 
         if (inputValue.value.isEmpty()) {
             Text(
-                modifier = Modifier.padding(top = 8.dp),
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .testTag(START_SEARCHING_TEXT_TEST_TAG),
                 color = MaterialTheme.colors.secondary,
                 text = stringResource(id = R.string.empty_search_text)
             )
