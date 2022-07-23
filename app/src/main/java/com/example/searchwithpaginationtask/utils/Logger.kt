@@ -5,5 +5,5 @@ package com.example.searchwithpaginationtask.utils
  */
 interface Logger {
 
-    fun error(msg: Exception)
+    fun error(e: Throwable)
 }

@@ -1,5 +1,6 @@
 package com.example.searchwithpaginationtask.data.di
 
+import com.example.searchwithpaginationtask.data.utils.ApiKeyInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -37,10 +38,11 @@ class NetworkModule {
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
             .addNetworkInterceptor(interceptor)
+            .addInterceptor(ApiKeyInterceptor())
             .build()
     }
 
     companion object {
-        private const val BASE_URL = "https://bdk0sta2n0.execute-api.eu-west-1.amazonaws.com/mobile-assignment/"
+        const val BASE_URL = "https://api.themoviedb.org/3/"
     }
 }

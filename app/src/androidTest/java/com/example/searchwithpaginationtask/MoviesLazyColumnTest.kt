@@ -7,15 +7,15 @@ import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.searchwithpaginationtask.domain.models.Product
+import com.example.searchwithpaginationtask.domain.models.Movie
 import com.example.searchwithpaginationtask.presentation.theme.SearchWithPaginationTaskTheme
 import com.example.searchwithpaginationtask.presentation.views.*
-import com.example.searchwithpaginationtask.stubs.StubProductsRepository.Companion.stubPagingData
+import com.example.searchwithpaginationtask.stubs.StubMoviesRepository.Companion.stubPagingData
 import kotlinx.coroutines.flow.flowOf
 import org.junit.Rule
 import org.junit.Test
 
-class ProductCardsLazyColumnTest {
+class MoviesLazyColumnTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
@@ -30,13 +30,15 @@ class ProductCardsLazyColumnTest {
                     append = LoadState.NotLoading(true),
                 )
 
-                val lazyItems: LazyPagingItems<Product> = flowOf(
-                    PagingData.from(data = emptyList<Product>(), sourceLoadStates = mainLoadingState)
+                val lazyItems: LazyPagingItems<Movie> = flowOf(
+                    PagingData.from(
+                        data = emptyList<Movie>(),
+                        sourceLoadStates = mainLoadingState
+                    )
                 ).collectAsLazyPagingItems()
-                ProductCardsLazyColumn(lazyItems)
+                MoviesLazyColumn(lazyItems)
             }
         }
-
         composeTestRule.onNodeWithTag(FULLSCREEN_LOADING_ITEM_TEST_TAG).assertIsDisplayed()
     }
 
@@ -49,23 +51,23 @@ class ProductCardsLazyColumnTest {
                     prepend = LoadState.NotLoading(false),
                     append = LoadState.Loading
                 )
-                val lazyItems: LazyPagingItems<Product> = flowOf(
+                val lazyItems: LazyPagingItems<Movie> = flowOf(
                     PagingData.from(
                         data = stubPagingData,
                         sourceLoadStates = mainLoadingState
                     )
                 ).collectAsLazyPagingItems()
-                ProductCardsLazyColumn(lazyItems)
+                MoviesLazyColumn(lazyItems)
             }
         }
 
-        composeTestRule.onNodeWithTag(PRODUCTS_LIST_TEST_TAG)
-            .performScrollToIndex(stubPagingData.lastIndex + 1)
+        val nextItemAfterMoviesIndex = stubPagingData.lastIndex + 1
+        composeTestRule.onNodeWithTag(MOVIES_LIST_TEST_TAG)
+            .performScrollToIndex(nextItemAfterMoviesIndex)
 
-        composeTestRule.onNodeWithTag(PRODUCTS_LIST_TEST_TAG)
-            .onChildren()
-            .onLast()
-            .assert(hasTestTag(LOADING_ITEM_TEST_TAG))
+        composeTestRule.onNodeWithTag(MOVIES_LIST_TEST_TAG)
+            .onChildren()[nextItemAfterMoviesIndex]
+            .assert(hasTestTag(LOADING_FOOTER_TEST_TAG))
     }
 
     @Test
@@ -78,13 +80,16 @@ class ProductCardsLazyColumnTest {
                     append = LoadState.NotLoading(true),
                 )
 
-                val lazyItems: LazyPagingItems<Product> = flowOf(
-                    PagingData.from(data = emptyList<Product>(), sourceLoadStates = mainErrorState)
+                val lazyItems: LazyPagingItems<Movie> = flowOf(
+                    PagingData.from(
+                        data = emptyList<Movie>(),
+                        sourceLoadStates = mainErrorState
+                    )
                 ).collectAsLazyPagingItems()
-                ProductCardsLazyColumn(lazyItems)
+                MoviesLazyColumn(lazyItems)
             }
         }
-        composeTestRule.onNodeWithTag(ERROR_ITEM_TEST_TAG).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(ERROR_FOOTER_TEST_TAG).assertIsDisplayed()
     }
 
     @Test
@@ -96,22 +101,44 @@ class ProductCardsLazyColumnTest {
                     prepend = LoadState.NotLoading(false),
                     append = LoadState.Error(Throwable())
                 )
-                val lazyItems: LazyPagingItems<Product> = flowOf(
+                val lazyItems: LazyPagingItems<Movie> = flowOf(
                     PagingData.from(
                         data = stubPagingData,
                         sourceLoadStates = mainLoadingState
                     )
                 ).collectAsLazyPagingItems()
-                ProductCardsLazyColumn(lazyItems)
+                MoviesLazyColumn(lazyItems)
             }
         }
 
-        composeTestRule.onNodeWithTag(PRODUCTS_LIST_TEST_TAG)
-            .performScrollToIndex(stubPagingData.lastIndex + 1)
+        val nextItemAfterMoviesIndex = stubPagingData.lastIndex + 1
+        composeTestRule.onNodeWithTag(MOVIES_LIST_TEST_TAG)
+            .performScrollToIndex(nextItemAfterMoviesIndex)
 
-        composeTestRule.onNodeWithTag(PRODUCTS_LIST_TEST_TAG)
-            .onChildren()
-            .onLast()
-            .assert(hasTestTag(ERROR_ITEM_TEST_TAG))
+        composeTestRule.onNodeWithTag(MOVIES_LIST_TEST_TAG)
+            .onChildren()[nextItemAfterMoviesIndex]
+            .assert(hasTestTag(ERROR_FOOTER_TEST_TAG))
+    }
+
+    @Test
+    fun whenDataIsEmptyShouldNothingToShowHeader() {
+        composeTestRule.setContent {
+            SearchWithPaginationTaskTheme {
+                val nothingIsLoadingState = LoadStates(
+                    refresh = LoadState.NotLoading(false),
+                    prepend = LoadState.NotLoading(false),
+                    append = LoadState.NotLoading(false)
+                )
+                val lazyItems: LazyPagingItems<Movie> = flowOf(
+                    PagingData.empty<Movie>(
+                        nothingIsLoadingState,
+                        nothingIsLoadingState
+                    )
+                ).collectAsLazyPagingItems()
+                MoviesLazyColumn(lazyItems)
+            }
+        }
+
+        composeTestRule.onNodeWithTag(NOTHING_TO_SHOW_TEST_TAG).assertIsDisplayed()
     }
 }

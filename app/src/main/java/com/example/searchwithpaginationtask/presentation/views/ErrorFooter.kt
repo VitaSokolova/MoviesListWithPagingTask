@@ -17,10 +17,10 @@ import androidx.compose.ui.unit.dp
 import com.example.searchwithpaginationtask.R
 import com.example.searchwithpaginationtask.presentation.theme.SearchWithPaginationTaskTheme
 
-const val ERROR_ITEM_TEST_TAG = "ERROR_ITEM_TEST_TAG"
+const val ERROR_FOOTER_TEST_TAG = "ERROR_FOOTER_TEST_TAG"
 
 @Composable
-fun ErrorItem(
+fun ErrorFooter(
     message: String,
     modifier: Modifier = Modifier,
     onClickRetry: () -> Unit
@@ -28,7 +28,7 @@ fun ErrorItem(
     Column(
         modifier = modifier
             .padding(16.dp)
-            .testTag(ERROR_ITEM_TEST_TAG),
+            .testTag(ERROR_FOOTER_TEST_TAG),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -51,6 +51,6 @@ fun ErrorItem(
 @Composable
 fun ErrorItemPreview() {
     SearchWithPaginationTaskTheme {
-        ErrorItem("Error", onClickRetry = {})
+        ErrorFooter("Error", onClickRetry = {})
     }
 }

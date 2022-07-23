@@ -2,40 +2,40 @@ package com.example.searchwithpaginationtask.data
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.searchwithpaginationtask.data.models.ProductDto
+import com.example.searchwithpaginationtask.data.models.MovieWithPageNumberDto
 import com.example.searchwithpaginationtask.utils.Logger
-import kotlinx.coroutines.CancellationException
 
-class ProductsPagingSource(
+class MoviesPagingSource(
     private val query: String,
-    private val productsCatalogApi: ProductsCatalogApi,
+    private val moviesCatalogApi: MoviesCatalogApi,
     private val logger: Logger
-) : PagingSource<Int, ProductDto>() {
+) : PagingSource<Int, MovieWithPageNumberDto>() {
 
-    override fun getRefreshKey(state: PagingState<Int, ProductDto>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, MovieWithPageNumberDto>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPageIndex = state.pages.indexOf(state.closestPageToPosition(anchorPosition))
             state.pages.getOrNull(anchorPageIndex + 1)?.prevKey ?: state.pages.getOrNull(anchorPageIndex - 1)?.nextKey
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ProductDto> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieWithPageNumberDto> {
         val currentPageNumber = params.key ?: STARTING_KEY
-        return try {
-            val prevKey = getPreviousPageIndex(currentPageNumber)
-            if (query.isEmpty()) {
-                // imitate real back-end behavior
-                LoadResult.Page(emptyList(), prevKey, null)
-            } else {
-                val newPage = productsCatalogApi.getProducts(query, currentPageNumber)
-                val nextKey = getNextPageIndex(currentPageNumber, newPage.pageCount)
-                LoadResult.Page(newPage.products, prevKey, nextKey)
-            }
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            logger.error(e)
-            LoadResult.Error(e)
+        val prevKey = getPreviousPageIndex(currentPageNumber)
+        return if (query.isEmpty()) {
+            LoadResult.Page(emptyList(), prevKey, null)
+        } else {
+            val newPage = moviesCatalogApi.getMovies( query, currentPageNumber, false)
+            val nextKey = getNextPageIndex(currentPageNumber, newPage.totalPages)
+            LoadResult.Page(
+                newPage.results.map {
+                    MovieWithPageNumberDto(
+                        movieDto = it,
+                        pageNumber = currentPageNumber
+                    )
+                },
+                prevKey,
+                nextKey
+            )
         }
     }
 

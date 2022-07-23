@@ -1,8 +1,8 @@
 package com.example.searchwithpaginationtask.di
 
-import com.example.searchwithpaginationtask.data.di.ProductsModule
-import com.example.searchwithpaginationtask.domain.repositories.ProductsRepository
-import com.example.searchwithpaginationtask.stubs.StubProductsRepository
+import com.example.searchwithpaginationtask.data.di.MoviesModule
+import com.example.searchwithpaginationtask.domain.repositories.MoviesRepository
+import com.example.searchwithpaginationtask.stubs.StubMoviesRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.components.SingletonComponent
@@ -12,11 +12,11 @@ import javax.inject.Singleton
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [ProductsModule::class]
+    replaces = [MoviesModule::class]
 )
 abstract class TestProductsModule {
 
     @Singleton
     @Binds
-    abstract fun bindTestProductsRepository(repository: StubProductsRepository): ProductsRepository
+    abstract fun bindTestProductsRepository(repository: StubMoviesRepository): MoviesRepository
 }

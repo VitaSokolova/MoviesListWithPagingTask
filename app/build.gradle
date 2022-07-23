@@ -16,6 +16,11 @@ android {
         versionCode 1
         versionName "1.0"
 
+        def apiKeyPropertiesFile = rootProject.file("apikey.properties")
+        def apiKeyProperties = new Properties()
+        apiKeyProperties.load(new FileInputStream(apiKeyPropertiesFile))
+        buildConfigField("String", "API_KEY", apiKeyProperties['API_KEY'])
+
         testInstrumentationRunner "com.example.searchwithpaginationtask.utils.CustomTestRunner"
         vectorDrawables {
             useSupportLibrary true

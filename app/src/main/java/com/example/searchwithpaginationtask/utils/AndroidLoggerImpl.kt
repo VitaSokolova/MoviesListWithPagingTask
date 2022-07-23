@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 class AndroidLoggerImpl @Inject constructor(): Logger {
 
-    override fun error(e: Exception) {
+    override fun error(e: Throwable) {
         Log.e(ERROR_TAG, e.message + e.stackTraceToString())
     }
 
