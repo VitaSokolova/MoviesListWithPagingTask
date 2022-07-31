@@ -45,7 +45,7 @@ fun MovieCard(modifier: Modifier, movie: Movie) {
                 .align(Alignment.CenterVertically)
             GlideImage(
                 modifier = pictureModifier,
-                imageModel = "https://image.tmdb.org/t/p/w500" + movie.poster,
+                imageModel = movie.poster,
                 contentScale = ContentScale.Crop,
                 loading = { ImagePlaceholder(modifier = pictureModifier) },
                 failure = { ImagePlaceholder(modifier = pictureModifier) },

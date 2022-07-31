@@ -17,7 +17,7 @@ internal fun MovieWithPageNumberDto.toDomain(genresToDomain: (GenreId) -> Genre?
         uniqueId = "${movieDto.id}" + "$pageNumber",
         movieId = movieDto.id,
         title = movieDto.title,
-        poster = movieDto.poster,
+        poster = "https://image.tmdb.org/t/p/w500" + movieDto.poster,
         overview = movieDto.overview,
         genre = movieDto.genreIds.mapNotNull { genresToDomain(GenreId(it)) }
     )
